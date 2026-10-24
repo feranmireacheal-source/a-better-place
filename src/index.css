@@ -1,0 +1,5 @@
+@tailwind base; @tailwind components; @tailwind utilities;
+body { @apply bg-ink text-zinc-200 antialiased; background-image: radial-gradient(ellipse at top, #12301f 0%, #050a07 60%); }
+html { scroll-behavior: smooth; }
+@keyframes rise { from { opacity:0; transform: translateY(16px) } to { opacity:1; transform:none } }
+.rise { animation: rise .8s ease both; }
