@@ -118,9 +118,12 @@ export default function App() {
       <section className="mx-auto max-w-5xl px-6 py-12">
         <h2 className="font-display text-3xl text-gold mb-6">Gallery</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <img src="/images/still-1.jpg" alt="Still from A Better Place" loading="lazy" className="w-full rounded-2xl border border-gold/30 object-cover" />
-          <img src="/images/poster.jpg" alt="A Better Place poster" loading="lazy" className="w-full rounded-2xl border border-gold/30 object-cover" />
-        </div>
+          <          <img src="/images/still-1.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[4/5] w-full rounded-2xl border border-gold/30 object-cover" />
+          <img src="/images/still-3.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[4/5] w-full rounded-2xl border border-gold/30 object-cover" />
+          <img src="/images/still-2.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[3/2] w-full rounded-2xl border border-gold/30 object-cover sm:col-span-2" />
+          <img src="/images/still-5.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[4/5] w-full rounded-2xl border border-gold/30 object-cover" />
+          <img src="/images/still-6.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[4/5] w-full rounded-2xl border border-gold/30 object-cover" />
+          <img src="/images/still-4.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[3/2] w-full rounded-2xl border border-gold/30 object-cover sm:col-span-2" />
       </section>
 
       <section id="tickets" className="mx-auto max-w-5xl px-6 py-12">
