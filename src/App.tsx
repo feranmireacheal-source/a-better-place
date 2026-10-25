@@ -22,6 +22,7 @@ function Booking() {
   const [err, setErr] = useState('')
   const [done, setDone] = useState<{ ref: string; total: number } | null>(null)
   const [key] = useState(() => crypto.randomUUID()) // idempotency key: double-clicks create one booking
+  const [seller, setSeller] = useState(() => { try { const r = new URLSearchParams(window.location.search).get('ref'); if (r) localStorage.setItem('abp_ref', r); return r || localStorage.getItem('abp_ref') || '' } catch { return '' } })
   const price = TICKETS.find(t => t.id === cat)!.price
 
   async function submit(e: React.FormEvent) {
@@ -33,7 +34,7 @@ function Booking() {
     if (!/^[0-9+\s-]{10,16}$/.test(f.phone)) return setErr('Enter a valid phone number.')
     setBusy(true)
     const { data, error } = await supabase.rpc('create_booking', {
-      p_name: f.name, p_email: f.email, p_phone: f.phone, p_category: cat, p_qty: qty, p_key: key })
+      p_name: f.name, p_email: f.email, p_phone: f.phone, p_category: cat, p_qty: qty, p_key: key, p_seller: seller || null })
     setBusy(false)
     if (error || !data?.[0]) return setErr('Could not create booking. Please try again or contact us on WhatsApp.')
     setDone({ ref: data[0].reference, total: data[0].total_amount })
@@ -78,6 +79,7 @@ function Booking() {
         <input aria-label="Quantity" className={inp} type="number" min={1} max={10} value={qty}
           onChange={e => setQty(Math.min(10, Math.max(1, Number(e.target.value) || 1)))} />
       </div>
+      <input className={inp} placeholder="Seller code (optional)" value={seller} maxLength={30} onChange={e => setSeller(e.target.value)} />
       <p className="text-lg">Estimated total: <b className="text-gold">{naira(price * qty)}</b>
         <span className="text-xs text-zinc-500"> (final amount is calculated by our server)</span></p>
       {err && <p role="alert" className="text-red-400">{err}</p>}
@@ -91,7 +93,7 @@ export default function App() {
       {!configured && <div role="alert" className="bg-gold/20 px-6 py-3 text-center text-sm text-gold">Setup needed: open the .env file and add your Supabase URL and anon key, then restart npm run dev. Booking is disabled until then.</div>}
       <section className="relative mx-auto grid max-w-6xl gap-10 px-6 py-20 md:grid-cols-2 md:items-center rise">
         <div>
-          <p className="tracking-[.3em] text-gold text-sm uppercase">ThebrainOriginal Films presents</p>
+          <p className="tracking-[.3em] text-gold text-sm uppercase">The Brain Original presents</p>
           <h1 className="font-display text-6xl md:text-7xl text-lime mt-3">A Better Place</h1>
           <p className="mt-5 text-lg text-zinc-300">A magical-realist romance about trauma, courage, safety, survival, and love. Charles, a poor student in 2025, falls into a sacred tree and meets Atirola, a student from 1996.</p>
           <a href="#tickets" className="mt-8 inline-block rounded-full bg-lime px-8 py-4 font-bold text-ink">Get Your Tickets</a>
