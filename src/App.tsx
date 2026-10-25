@@ -81,7 +81,7 @@ function Booking() {
       </div>
       <input className={inp} placeholder="Seller code (optional)" value={seller} maxLength={30} onChange={e => setSeller(e.target.value)} />
       <p className="text-lg">Estimated total: <b className="text-gold">{naira(price * qty)}</b>
-        <span className="text-xs text-zinc-500"> (final amount is calculated by our server)</span></p>
+        <span className="text-xs text-zinc-500"> (a small Paystack processing fee is added at checkout)</span></p>
       {err && <p role="alert" className="text-red-400">{err}</p>}
       <button disabled={busy} className="w-full rounded-lg bg-lime px-6 py-4 font-bold text-ink disabled:opacity-50">{busy ? 'Please wait…' : 'Book and pay'}</button>
     </form>)
