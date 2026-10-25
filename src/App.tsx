@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { supabase, env, configured } from './supabase'
 
 const TICKETS = [
@@ -13,6 +13,56 @@ const FAQ = [
   ['How do I pay?', 'Securely on Paystack by card, bank transfer or USSD. We never see your card details.'],
   ['Does each ticket have its own QR?', 'Yes. Every ticket has a unique QR code and can be used once at the entrance.'],
 ]
+
+function PaidTickets({ reference }: { reference: string }) {
+  const [res, setRes] = useState<any>(null)
+  const [gaveUp, setGaveUp] = useState(false)
+  const [noKey, setNoKey] = useState(false)
+  useEffect(() => {
+    document.getElementById('tickets')?.scrollIntoView({ behavior: 'smooth' })
+    let stop = false
+    let key = ''
+    try { key = localStorage.getItem('abp_key') || '' } catch { key = '' }
+    if (!key) { setNoKey(true); return }
+    async function check(n: number) {
+      if (stop) return
+      const { data } = await supabase.functions.invoke('my-tickets', { body: { key } })
+      if (stop) return
+      setRes(data)
+      if (data?.status === 'PAID') return
+      if (n >= 20) return setGaveUp(true)
+      setTimeout(() => check(n + 1), 3000)
+    }
+    check(0)
+    return () => { stop = true }
+  }, [])
+  const box = 'rounded-2xl border border-gold/40 bg-forest/80 p-6 space-y-3'
+  const help = <a className="block text-sm underline" href={wa(`Hello, my booking reference is ${reference}.`)}>Need help? WhatsApp us</a>
+  if (res?.status === 'PAID') return (
+    <div className={box}>
+      <h3 className="font-display text-2xl text-gold">Payment confirmed. Your tickets</h3>
+      <p>Booking reference: <b className="text-lime">{res.reference}</b></p>
+      {res.tickets.map((t: any) => (
+        <div key={t.number} className="flex items-center justify-between rounded-lg bg-black/40 p-3">
+          <span>{t.number} · {t.category}</span>
+          <a className="rounded bg-lime px-4 py-2 font-semibold text-ink" href={t.url} target="_blank" rel="noreferrer">Download ticket</a>
+        </div>))}
+      <p className="text-sm text-zinc-400">Each ticket has its own QR code and admits one person, once. Save or screenshot your tickets and do not share them.</p>
+      {help}
+    </div>)
+  if (noKey || gaveUp) return (
+    <div className={box}>
+      <h3 className="font-display text-2xl text-gold">We could not show your tickets here</h3>
+      <p>Your booking reference is <b className="text-lime">{reference}</b>. If you paid, send us this reference on WhatsApp and we will confirm it. Please open this page in the same browser you booked from.</p>
+      {help}
+    </div>)
+  return (
+    <div className={box}>
+      <h3 className="font-display text-2xl text-gold">Confirming your payment…</h3>
+      <p>Please keep this page open. Your tickets appear here as soon as the payment is confirmed.</p>
+      {help}
+    </div>)
+}
 
 function Booking() {
   const [cat, setCat] = useState('REGULAR')
@@ -37,6 +87,7 @@ function Booking() {
       p_name: f.name, p_email: f.email, p_phone: f.phone, p_category: cat, p_qty: qty, p_key: key, p_seller: seller || null })
     setBusy(false)
     if (error || !data?.[0]) return setErr('Could not create booking. Please try again or contact us on WhatsApp.')
+    try { localStorage.setItem('abp_key', key) } catch { /* ignore */ }
     setDone({ ref: data[0].reference, total: data[0].total_amount })
     pay(data[0].reference, f.email)
   }
@@ -50,13 +101,7 @@ function Booking() {
   const inp = 'w-full rounded-lg bg-black/40 border border-lime/20 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-lime'
 
   const paidRef = new URLSearchParams(window.location.search).get('paid')
-  if (paidRef) return (
-    <div className="rounded-2xl border border-gold/40 bg-forest/80 p-6 space-y-3">
-      <h3 className="font-display text-2xl text-gold">Thank you!</h3>
-      <p>If your payment went through, we are confirming it now. Your booking reference is <b className="text-lime">{paidRef}</b>.</p>
-      <p className="text-sm text-zinc-400">Tickets are issued only after Paystack confirms the payment to our server.</p>
-      <a className="block text-sm underline" href={wa(`Hello, my booking reference is ${paidRef}.`)}>Need help? WhatsApp us</a>
-    </div>)
+  if (paidRef) return <PaidTickets reference={paidRef} />
 
   if (done) return (
     <div className="rounded-2xl border border-gold/40 bg-forest/80 p-6 space-y-4">
