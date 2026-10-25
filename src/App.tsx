@@ -94,7 +94,7 @@ export default function App() {
       <section className="relative mx-auto grid max-w-6xl gap-10 px-6 py-20 md:grid-cols-2 md:items-center rise">
         <div>
           <p className="tracking-[.3em] text-gold text-sm uppercase">The Brain Original presents</p>
-          <h1 className="font-display text-6xl md:text-7xl text-lime mt-3">A Better Place</h1>
+                   <h1 className="mt-3"><img src="/images/logo.png" alt="A Better Place" className="w-full max-w-md" /></h1>
           <p className="mt-5 text-lg text-zinc-300">A magical-realist romance about trauma, courage, safety, survival, and love. Charles, a poor student in 2025, falls into a sacred tree and meets Atirola, a student from 1996.</p>
           <a href="#tickets" className="mt-8 inline-block rounded-full bg-lime px-8 py-4 font-bold text-ink">Get Your Tickets</a>
         </div>
