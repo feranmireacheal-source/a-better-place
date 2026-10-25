@@ -94,11 +94,10 @@ export default function App() {
       <section className="relative mx-auto grid max-w-6xl gap-10 px-6 py-20 md:grid-cols-2 md:items-center rise">
         <div>
           <p className="tracking-[.3em] text-gold text-sm uppercase">The Brain Original presents</p>
-                   <h1 className="mt-3"><img src="/images/logo.png" alt="A Better Place" className="w-full max-w-md" /></h1>
+          <h1 className="mt-3"><img src="/images/logo.png" alt="A Better Place" className="w-full max-w-md" /></h1>
           <p className="mt-5 text-lg text-zinc-300">A magical-realist romance about trauma, courage, safety, survival, and love. Charles, a poor student in 2025, falls into a sacred tree and meets Atirola, a student from 1996.</p>
           <a href="#tickets" className="mt-8 inline-block rounded-full bg-lime px-8 py-4 font-bold text-ink">Get Your Tickets</a>
         </div>
-        {/* Put your real poster at public/images/poster.jpg */}
         <img src="/images/poster.jpg" alt="A Better Place movie poster" className="aspect-[4/5] w-full rounded-2xl border border-gold/40 bg-forest object-cover" />
       </section>
 
@@ -118,12 +117,13 @@ export default function App() {
       <section className="mx-auto max-w-5xl px-6 py-12">
         <h2 className="font-display text-3xl text-gold mb-6">Gallery</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <          <img src="/images/still-1.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[4/5] w-full rounded-2xl border border-gold/30 object-cover" />
+          <img src="/images/still-1.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[4/5] w-full rounded-2xl border border-gold/30 object-cover" />
           <img src="/images/still-3.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[4/5] w-full rounded-2xl border border-gold/30 object-cover" />
           <img src="/images/still-2.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[3/2] w-full rounded-2xl border border-gold/30 object-cover sm:col-span-2" />
           <img src="/images/still-5.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[4/5] w-full rounded-2xl border border-gold/30 object-cover" />
           <img src="/images/still-6.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[4/5] w-full rounded-2xl border border-gold/30 object-cover" />
           <img src="/images/still-4.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[3/2] w-full rounded-2xl border border-gold/30 object-cover sm:col-span-2" />
+        </div>
       </section>
 
       <section id="tickets" className="mx-auto max-w-5xl px-6 py-12">
