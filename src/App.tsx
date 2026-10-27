@@ -147,6 +147,13 @@ export default function App() {
       </section>
 
       <section className="mx-auto max-w-4xl px-6 py-12">
+        <h2 className="font-display text-3xl text-gold mb-6">Watch the Trailer</h2>
+        <div className="aspect-video w-full overflow-hidden rounded-2xl border border-gold/30 bg-black">
+          <iframe className="h-full w-full" src="https://www.youtube-nocookie.com/embed/kdCJEfpfNgs" title="A Better Place trailer" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen />
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-4xl px-6 py-12">
         <h2 className="font-display text-3xl text-gold mb-4">The Story</h2>
         <p>Charles, a poor University of Ibadan student in 2025, escapes bullies by falling into a sacred tree. Inside, he discovers a hidden sanctuary and meets Atirola, a student from 1996 who fled an attempted assault. Seven other survivors from Africa shelter there.</p>
         <p className="mt-4">Together, they uncover the tree's secrets and discover that it is Iyawo, a woman forced into marriage who surrendered her humanity to protect helpless people.</p>
@@ -157,18 +164,6 @@ export default function App() {
         {[['Date', '25 November 2026'], ['Red carpet', '4:00 PM'], ['Screening', '8:00 PM']].map(([a, b]) =>
           <div key={a} className="rounded-xl border border-lime/20 bg-forest/60 p-5"><p className="text-xs uppercase text-gold">{a}</p><p className="text-xl mt-1">{b}</p></div>)}
         <p className="sm:col-span-3 text-zinc-300">Venue: White House, Federal University Oye-Ekiti, Ekiti State, Nigeria</p>
-      </section>
-
-      <section className="mx-auto max-w-5xl px-6 py-12">
-        <h2 className="font-display text-3xl text-gold mb-6">Gallery</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <img src="/images/still-1.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[4/5] w-full rounded-2xl border border-gold/30 object-cover" />
-          <img src="/images/still-3.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[4/5] w-full rounded-2xl border border-gold/30 object-cover" />
-          <img src="/images/still-2.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[3/2] w-full rounded-2xl border border-gold/30 object-cover sm:col-span-2" />
-          <img src="/images/still-5.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[4/5] w-full rounded-2xl border border-gold/30 object-cover" />
-          <img src="/images/still-6.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[4/5] w-full rounded-2xl border border-gold/30 object-cover" />
-          <img src="/images/still-4.jpg" alt="Still from A Better Place" loading="lazy" className="aspect-[3/2] w-full rounded-2xl border border-gold/30 object-cover sm:col-span-2" />
-        </div>
       </section>
 
       <section id="tickets" className="mx-auto max-w-5xl px-6 py-12">
