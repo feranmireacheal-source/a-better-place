@@ -67,7 +67,7 @@ function PaidTickets({ reference }: { reference: string }) {
 function Booking() {
   const [cat, setCat] = useState('REGULAR')
   const [qty, setQty] = useState(1)
-  const [f, setF] = useState({ name: '', email: '', phone: '' })
+  const [f, setF] = useState({ name: '', email: '', email2: '', phone: '' })
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
   const [done, setDone] = useState<{ ref: string; total: number } | null>(null)
@@ -81,6 +81,7 @@ function Booking() {
     if (!configured) return setErr('Site not configured yet: add your Supabase URL and anon key to the .env file, then restart.')
     if (f.name.trim().length < 2) return setErr('Enter your full name.')
     if (!/^\S+@\S+\.\S+$/.test(f.email)) return setErr('Enter a valid email.')
+    if (f.email.trim().toLowerCase() !== f.email2.trim().toLowerCase()) return setErr('The two email addresses do not match. Please check them carefully, because your tickets are sent there.')
     if (!/^[0-9+\s-]{10,16}$/.test(f.phone)) return setErr('Enter a valid phone number.')
     setBusy(true)
     const { data, error } = await supabase.rpc('create_booking', {
@@ -117,6 +118,7 @@ function Booking() {
     <form onSubmit={submit} className="space-y-4">
       <input className={inp} placeholder="Full name" value={f.name} maxLength={80} onChange={e => setF({ ...f, name: e.target.value })} />
       <input className={inp} type="email" placeholder="Email address" value={f.email} maxLength={120} onChange={e => setF({ ...f, email: e.target.value })} />
+      <input className={inp} type="email" placeholder="Confirm email address (type it again)" value={f.email2} maxLength={120} onPaste={e => e.preventDefault()} onChange={e => setF({ ...f, email2: e.target.value })} />
       <input className={inp} type="tel" placeholder="Phone number" value={f.phone} maxLength={16} onChange={e => setF({ ...f, phone: e.target.value })} />
       <div className="grid grid-cols-2 gap-3">
         <select aria-label="Ticket category" className={inp} value={cat} onChange={e => setCat(e.target.value)}>
