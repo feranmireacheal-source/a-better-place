@@ -54,9 +54,9 @@ export default function Admin() {
     (!k || [r.reference, r.full_name, r.email, r.phone].some((v: string) => v.toLowerCase().includes(k))))
   const cur = rows.find(r => r.id === sel)
 
-  async function act(action: 'verify' | 'resend', id: string) {
+  async function act(action: 'verify' | 'resend' | 'change_email', id: string, new_email?: string) {
     setBusy(true); setMsg('')
-    const { data, error } = await supabase.functions.invoke('admin-actions', { body: { action, booking_id: id } })
+    const { data, error } = await supabase.functions.invoke('admin-actions', { body: { action, booking_id: id, new_email } })
     setBusy(false)
     setMsg(error ? 'Action failed: ' + error.message : 'Result: ' + JSON.stringify(data))
     load()
@@ -114,6 +114,7 @@ export default function Admin() {
               {cur.payment_status === 'PENDING' && <button disabled={busy} onClick={() => act('verify', cur.id)} className="rounded bg-lime px-3 py-2 font-semibold text-ink disabled:opacity-50">Re-check with Paystack</button>}
               {cur.payment_status === 'PENDING' && <button disabled={busy} onClick={() => confirm('Reject this booking?') && simple('reject_payment', { p_booking: cur.id })} className="rounded border border-red-400 px-3 py-2 text-red-400">Reject</button>}
               {cur.payment_status === 'PAID' && cur.email_status !== 'SENT' && <button disabled={busy} onClick={() => act('resend', cur.id)} className="rounded bg-lime px-3 py-2 font-semibold text-ink disabled:opacity-50">{cur.email_status === 'FAILED' ? 'Retry email' : 'Send email'}</button>}
+              {cur.payment_status === 'PAID' && <button disabled={busy} onClick={() => { const e = window.prompt('Type the correct email address. The tickets will be sent there.', cur.email); if (e && e.trim() && window.confirm(`Send the tickets to ${e.trim()}?`)) act('change_email', cur.id, e.trim()) }} className="rounded border border-lime px-3 py-2 text-lime disabled:opacity-50">Change email and resend</button>}
             </div>
             <h3 className="pt-2 text-gold">Tickets</h3>
             {(cur.tickets ?? []).length === 0 && <p className="text-zinc-500">No tickets (issued only after verified payment).</p>}
