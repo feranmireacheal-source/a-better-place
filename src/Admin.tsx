@@ -32,6 +32,23 @@ export default function Admin() {
     }
   }, [rows])
 
+  const bySeller = useMemo(() => {
+    const m: Record<string, { tickets: number; bookings: number }> = {}
+    rows.filter(r => r.payment_status === 'PAID').forEach(r => {
+      const k = r.seller || 'NO SELLER'
+      const n = (r.tickets ?? []).filter((t: B) => t.status !== 'VOID').length
+      m[k] = m[k] || { tickets: 0, bookings: 0 }
+      m[k].tickets += n; m[k].bookings += 1
+    })
+    return Object.entries(m).sort((a, b) => b[1].tickets - a[1].tickets)
+  }, [rows])
+  function downloadSellers() {
+    const csv = 'Seller,Paid tickets,Paid bookings\n' + bySeller.map(([n, v]) => `${n},${v.tickets},${v.bookings}`).join('\n')
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }))
+    a.download = 'tickets-by-seller.csv'; a.click()
+  }
+
   const k = q.trim().toLowerCase()
   const shown = rows.filter(r => (st === 'ALL' || r.payment_status === st || (st === 'EMAIL_FAILED' && r.email_status === 'FAILED')) &&
     (!k || [r.reference, r.full_name, r.email, r.phone].some((v: string) => v.toLowerCase().includes(k))))
@@ -59,6 +76,15 @@ export default function Admin() {
         {card('Tickets sold (paid)', s.sold)}{card('Revenue (paid only)', naira(s.revenue))}{card('Tickets redeemed', s.used)}{card('Email failures', s.emailFail)}
         {CATS.map(c => card(`${c} tickets`, s.byCat[c]))}
       </div>
+      <div className="rounded-xl border border-lime/20 bg-forest/70 p-4">
+        <div className="mb-2 flex items-center justify-between">
+          <h2 className="text-lg text-gold">Tickets sold by seller (paid bookings only)</h2>
+          <button onClick={downloadSellers} className="rounded border border-lime px-3 py-1 text-sm text-lime">Download CSV</button>
+        </div>
+        <table className="w-full text-left text-sm"><thead><tr><th className="py-1">Seller</th><th>Paid tickets</th><th>Paid bookings</th></tr></thead>
+          <tbody>{bySeller.map(([n, v]) => <tr key={n} className="border-t border-lime/10"><td className="py-1">{n}</td><td>{v.tickets}</td><td>{v.bookings}</td></tr>)}
+            {!bySeller.length && <tr><td colSpan={3} className="py-2 text-zinc-500">No paid bookings yet.</td></tr>}</tbody></table>
+      </div>
       <div className="flex flex-wrap gap-2">
         <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search reference, name, email, phone" className="min-w-[240px] flex-1 rounded-lg bg-black/40 border border-lime/20 px-3 py-2" />
         <select value={st} onChange={e => setSt(e.target.value)} className="rounded-lg bg-black/40 border border-lime/20 px-3 py-2">
@@ -79,6 +105,7 @@ export default function Admin() {
           <div className="space-y-2 rounded-xl border border-gold/30 bg-forest/70 p-4 text-sm">
             <h2 className="text-lg text-lime">{cur.reference} · {cur.payment_status}</h2>
             <p>{cur.full_name} · {cur.email} · {cur.phone}</p>
+            <p>Seller: {cur.seller || 'none'}</p>
             <p>{cur.quantity} × {cur.category} @ {naira(cur.unit_price)} = <b>{naira(cur.total_amount)}</b></p>
             <p>Paystack ref: {cur.paystack_reference ?? 'none (never opened checkout)'}</p>
             <p>Payment verified at: {cur.verified_at ? new Date(cur.verified_at).toLocaleString() : 'not verified'}</p>
