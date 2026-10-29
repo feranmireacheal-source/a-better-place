@@ -123,7 +123,7 @@ function Booking() {
       <div className="grid grid-cols-2 gap-3">
         <select aria-label="Ticket category" className={inp} value={cat} onChange={e => setCat(e.target.value)}>
           {TICKETS.map(t => <option key={t.id} value={t.id}>{t.name} – {naira(t.price)}</option>)}</select>
-        <input aria-label="Quantity" className={inp} type="number" min={1} max={10} value={qty}
+        <input aria-label="Quantity" className={inp} type="number" min={1} max={100} value={qty}
           onChange={e => setQty(Math.min(10, Math.max(1, Number(e.target.value) || 1)))} />
       </div>
       <input className={inp} placeholder="Seller code (optional)" value={seller} maxLength={30} onChange={e => setSeller(e.target.value)} />
