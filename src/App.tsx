@@ -124,7 +124,7 @@ function Booking() {
         <select aria-label="Ticket category" className={inp} value={cat} onChange={e => setCat(e.target.value)}>
           {TICKETS.map(t => <option key={t.id} value={t.id}>{t.name} – {naira(t.price)}</option>)}</select>
         <input aria-label="Quantity" className={inp} type="number" min={1}  value={qty}
-          onChange={e => setQty(Math.min(10, Math.max(1, Number(e.target.value) || 1)))} />
+          onChange={e => setQty(Math.max(1, Math.floor(Number(e.target.value) || 1)))}
       </div>
       <input className={inp} placeholder="Seller code (optional)" value={seller} maxLength={30} onChange={e => setSeller(e.target.value)} />
       <p className="text-lg">Estimated total: <b className="text-gold">{naira(price * qty)}</b>
